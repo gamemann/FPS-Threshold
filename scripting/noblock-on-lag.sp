@@ -1,4 +1,5 @@
 #include <sourcemod>
+#include <noblock-on-lag>
 
 #define MAXSTORE 256
 
@@ -27,6 +28,9 @@ ConVar cvNoblockTime = null;
 ConVar cvNotify = null;
 ConVar cvDebug = null;
 
+GlobalForward g_fwdOnDetect;
+GlobalForward g_fwdOnDetectEnd;
+
 public void OnPluginStart()
 {
     cvMaxStore = CreateConVar("sm_nol_avgtime", "6", "How long ago should we calculate the FPS average from");
@@ -34,6 +38,9 @@ public void OnPluginStart()
     cvNoblockTime = CreateConVar("sm_nol_time", "5", "How long to force noblock on all players for.");
     cvNotify = CreateConVar("sm_nol_notify", "1", "Print to chat all when the server is lagging.");
     cvDebug = CreateConVar("sm_nol_debug", "0", "Debug calculations or not.");
+
+    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event);
+    g_fwdOnDetectEnd = CreateGlobalForward("OnDetectEnd", ET_Event);
 
     RegAdminCmd("sm_fps", Command_FPS, ADMFLAG_SLAY);
 
@@ -79,6 +86,10 @@ public void ForceCollision(bool block)
 public Action Timer_Block(Handle timer)
 {
     ForceCollision(true);
+
+    // Call On Detection End forward.
+    Call_StartForward(g_fwdOnDetectEnd);
+    Call_Finish();
 
     insequence = false;
 }
@@ -131,6 +142,10 @@ public Action Timer_FPS(Handle timer)
 
         if (avg < cvThreshold.IntValue)
         {
+            // Call On Detection forward.
+            Call_StartForward(g_fwdOnDetect);
+            Call_Finish();
+
             insequence = true;
 
             if (cvNotify.BoolValue)
