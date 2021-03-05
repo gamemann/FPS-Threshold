@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "options": 
+    {
+        "env": 
+        {
+            "sm_path": "/home/dev/GFL/SourceMod/scripting"
+        }
+    },
+    "tasks": 
+    [
+        {
+            "label": "sourcepawn",
+            "type": "shell",
+            "command": "$sm_path/spcomp64 ${file} -D ${workspaceFolder} -i ${workspaceFolder}/scripting/include -i $gfl_core/scripting/include -i $gfl_mysql/scripting/include -i $sm_path/include && sudo mv ${workspaceFolder}/noblock-on-lag.smx /home/roy/css/cstrike/addons/sourcemod/plugins",
+            "problemMatcher": []
+        }
+    ]
+}
