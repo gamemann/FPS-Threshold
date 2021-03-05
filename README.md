@@ -11,5 +11,24 @@ I've made this in hopes to mitigate damage on [Elite Hunterz](https://forum.elit
 * **sm_nol_notify** - Whether to print a message to everybody when poor performance is detected.
 * **sm_nol_debug** - Whether to insert debug messages into the console.
 
+## Forwards
+This plugins comes with two forwards to allow other plugins to interact. The forwards may be found below.
+
+```C
+/**
+ * Called when the server is caught going under the average FPS threshold.
+ * 
+ * @return void
+ */
+forward void OnDectect();
+
+/**
+ * Called when the timer is up after OnDetect().
+ * 
+ * @return void
+ */
+forward void OnDectectEnd();
+```
+
 ## Credits
 * [Christian Deacon](https://github.com/gamemann)
