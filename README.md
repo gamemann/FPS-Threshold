@@ -12,7 +12,7 @@ I've made this in hopes to mitigate damage on [Elite Hunterz](https://forum.elit
 * **sm_nol_debug** - Whether to insert debug messages into the console.
 
 ## Forwards
-This plugins comes with two forwards to allow other plugins to interact. The forwards may be found below.
+This plugin comes with two forwards to allow other plugins to interact. The forwards may be found below.
 
 ```C
 /**
