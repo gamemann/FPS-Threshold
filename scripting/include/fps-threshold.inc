@@ -6,4 +6,4 @@
  * 
  * @return void
  */
-forward void OnDectect(int avgfps, int curfps);
+forward void FPSTH_OnDetect(int avgfps, int curfps);

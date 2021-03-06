@@ -29,7 +29,7 @@ public void OnPluginStart()
     g_cvMaxStore = CreateConVar("sm_fpsth_avgtime", "6", "How long ago should we calculate the FPS average from");
     g_cvThreshold = CreateConVar("sm_fpsth_threshold", "3", "If the average server FPS goes below this, start OnDetect() forward for all associated plugins.");
 
-    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event, Param_Cell, Param_Cell);
+    g_fwdOnDetect = CreateGlobalForward("FPSTH_OnDetect", ET_Event, Param_Cell, Param_Cell);
 
     RegAdminCmd("sm_fps", Command_FPS, ADMFLAG_SLAY);
 
