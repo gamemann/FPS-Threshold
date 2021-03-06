@@ -12,41 +12,41 @@ public Plugin myinfo =
     url = "https://github.com/gamemann"
 };
 
-int collision;
+int g_collisionoff;
 
-int lastfps = 67;
-int lasttick = 0;
-int index = 0;
-int fpsarr[MAXSTORE];
+int g_lastfps = 67;
+int g_lasttick = 0;
+int g_index = 0;
+int g_fpsarr[MAXSTORE];
 
-bool insequence = false;
-bool uptospeed = false;
+bool g_insequence = false;
+bool g_uptospeed = false;
 
-ConVar cvMaxStore = null;
-ConVar cvThreshold = null;
-ConVar cvNoblockTime = null;
-ConVar cvNotify = null;
-ConVar cvDebug = null;
+ConVar g_cvMaxStore = null;
+ConVar g_cvThreshold = null;
+ConVar g_cvNoblockTime = null;
+ConVar g_cvNotify = null;
+ConVar g_cvDebug = null;
 
 GlobalForward g_fwdOnDetect;
 GlobalForward g_fwdOnDetectEnd;
 
 public void OnPluginStart()
 {
-    cvMaxStore = CreateConVar("sm_nol_avgtime", "6", "How long ago should we calculate the FPS average from");
-    cvThreshold = CreateConVar("sm_nol_theshold", "3", "If the average server FPS goes below this, force noblock on all plugins.");
-    cvNoblockTime = CreateConVar("sm_nol_time", "5", "How long to force noblock on all players for.");
-    cvNotify = CreateConVar("sm_nol_notify", "1", "Print to chat all when the server is lagging.");
-    cvDebug = CreateConVar("sm_nol_debug", "0", "Debug calculations or not.");
+    g_cvMaxStore = CreateConVar("sm_nol_avgtime", "6", "How long ago should we calculate the FPS average from");
+    g_cvThreshold = CreateConVar("sm_nol_theshold", "3", "If the average server FPS goes below this, force noblock on all plugins.");
+    g_cvNoblockTime = CreateConVar("sm_nol_time", "5", "How long to force noblock on all players for.");
+    g_cvNotify = CreateConVar("sm_nol_notify", "1", "Print to chat all when the server is lagging.");
+    g_cvDebug = CreateConVar("sm_nol_debug", "0", "Debug calculations or not.");
 
     g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event);
     g_fwdOnDetectEnd = CreateGlobalForward("OnDetectEnd", ET_Event);
 
     RegAdminCmd("sm_fps", Command_FPS, ADMFLAG_SLAY);
 
-    collision = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
+    g_collisionoff = FindSendPropInfo("CBaseEntity", "m_CollisionGroup");
 
-    if (collision == -1)
+    if (g_collisionoff == -1)
     {
         SetFailState("Could not find offset for => CBaseEntity::m_CollisionGroup. Plugin failed.");
     }
@@ -58,7 +58,7 @@ public void OnPluginStart()
 
 public Action Command_FPS(int client, int args)
 {
-    ReplyToCommand(client, "Latest FPS => %d", lastfps);
+    ReplyToCommand(client, "Latest FPS => %d", g_lastfps);
 
     return Plugin_Handled;
 }
@@ -74,11 +74,11 @@ public void ForceCollision(bool block)
 
         if (block)
         {
-            SetEntData(i, collision, 5, 4, true);
+            SetEntData(i, g_collisionoff, 5, 4, true);
         }
         else
         {
-            SetEntData(i, collision, 2, 4, true);
+            SetEntData(i, g_collisionoff, 2, 4, true);
         }
     }
 }
@@ -91,41 +91,41 @@ public Action Timer_Block(Handle timer)
     Call_StartForward(g_fwdOnDetectEnd);
     Call_Finish();
 
-    insequence = false;
+    g_insequence = false;
 }
 
 public Action Timer_FPS(Handle timer)
 {
     int now = GetGameTickCount();
-    int fps = now - lasttick;
-    lasttick = now;
-    lastfps = fps;
+    int fps = now - g_lasttick;
+    g_lasttick = now;
+    g_lastfps = fps;
 
-    // Reset index if it exceeds cvMaxStore value.
-    if (index > (cvMaxStore.IntValue - 1))
+    // Reset g_lasttick if it exceeds g_cvMaxStore value.
+    if (g_lasttick > (g_cvMaxStore.IntValue - 1))
     {
-        uptospeed = true;
-        index = 0;
+        g_uptospeed = true;
+        g_index = 0;
     }
 
-    fpsarr[index] = fps;
+    g_fpsarr[g_lasttick] = fps;
     
-    if (uptospeed && !insequence)
+    if (g_uptospeed && !g_insequence)
     {
         // Calculate average FPS.
         int avg;
-        int j = index;
+        int j = g_index;
 
-        for (int i = 0; i < cvMaxStore.IntValue; i++)
+        for (int i = 0; i < g_cvMaxStore.IntValue; i++)
         {
             if (j < 0)
             {
-                j = (cvMaxStore.IntValue - 1);
+                j = (g_cvMaxStore.IntValue - 1);
             }
 
-            avg += fpsarr[j];
+            avg += g_fpsarr[j];
 
-            if (cvDebug.BoolValue)
+            if (g_cvDebug.BoolValue)
             {
                 PrintToServer("Avg => %d. J => %d", avg, j);
             }
@@ -133,38 +133,38 @@ public Action Timer_FPS(Handle timer)
             j--;
         }
 
-        if (cvDebug.BoolValue)
+        if (g_cvDebug.BoolValue)
         {
-            PrintToServer("Checking %d/%d = %d > %d ", avg, cvMaxStore.IntValue, (avg / cvMaxStore.IntValue), cvThreshold.IntValue);
+            PrintToServer("Checking %d/%d = %d > %d ", avg, g_cvMaxStore.IntValue, (avg / g_cvMaxStore.IntValue), g_cvThreshold.IntValue);
         }
 
-        avg /= cvMaxStore.IntValue;
+        avg /= g_cvMaxStore.IntValue;
 
-        if (avg < cvThreshold.IntValue)
+        if (avg < g_cvThreshold.IntValue)
         {
             // Call On Detection forward.
             Call_StartForward(g_fwdOnDetect);
             Call_Finish();
 
-            insequence = true;
+            g_insequence = true;
 
-            if (cvNotify.BoolValue)
+            if (g_cvNotify.BoolValue)
             {
                 PrintToChatAll("[NOL] Detected poor server performance. Enforcing noblock on all players.");
             }
 
-            if (cvDebug.BoolValue)
+            if (g_cvDebug.BoolValue)
             {
-                PrintToServer("[NOL] Average server FPS went under threshold (%d > %d) (Index => %d => %d)", cvThreshold.IntValue, avg, index, fpsarr[index]);
+                PrintToServer("[NOL] Average server FPS went under threshold (%d > %d) (g_lasttick => %d => %d)", g_cvThreshold.IntValue, avg, g_lasttick, g_fpsarr[g_lasttick]);
             }
 
             ForceCollision(false);
 
-            CreateTimer(cvNoblockTime.FloatValue, Timer_Block, _, TIMER_FLAG_NO_MAPCHANGE);
+            CreateTimer(g_cvNoblockTime.FloatValue, Timer_Block, _, TIMER_FLAG_NO_MAPCHANGE);
         }
     }
 
-    index++;
+    g_index++;
 
     return Plugin_Continue;
 }
