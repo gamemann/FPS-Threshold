@@ -6,7 +6,7 @@ I've made this in hopes to mitigate damage on [Elite Hunterz](https://forum.elit
 
 ## ConVars
 * **sm_fpsth_avgtime** - Calculate the average FPS for *x* seconds (*x* representing the CVar value).
-* **sm_fpsth_threshold** - If the average FPS goes below this average, call `OnDetect()` forward.
+* **sm_fpsth_threshold** - If the average FPS goes below this average, call `FPSTH_OnDetect()` forward.
 
 ## Forwards
 This plugin comes with one forward to allow other plugins to interact. The forward may be found below.
@@ -20,7 +20,7 @@ This plugin comes with one forward to allow other plugins to interact. The forwa
  * 
  * @return void
  */
-forward void OnDectect(int avgfps, int curfps);
+forward void FPSTH_OnDetect(int avgfps, int curfps);
 ```
 
 ## Useful Plugins
