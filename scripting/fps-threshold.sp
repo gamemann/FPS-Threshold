@@ -27,15 +27,15 @@ GlobalForward g_fwdOnDetect;
 public void OnPluginStart()
 {
     g_cvMaxStore = CreateConVar("sm_fpsth_avgtime", "6", "How long ago should we calculate the FPS average from");
-    g_cvThreshold = CreateConVar("sm_fpsth_threshold", "3", "If the average server FPS goes below this, force noblock on all plugins.");
+    g_cvThreshold = CreateConVar("sm_fpsth_threshold", "3", "If the average server FPS goes below this, start OnDetect() forward for all associated plugins.");
 
-    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event, Param_Cell);
+    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event, Param_Cell, Param_Cell);
 
     RegAdminCmd("sm_fps", Command_FPS, ADMFLAG_SLAY);
 
     CreateTimer(1.0, Timer_FPS, _, TIMER_FLAG_NO_MAPCHANGE | TIMER_REPEAT);
 
-    AutoExecConfig(true, "plugin.nol");
+    AutoExecConfig(true, "plugin.fpsth");
 }
 
 public Action Command_FPS(int client, int args)
@@ -52,8 +52,8 @@ public Action Timer_FPS(Handle timer)
     g_lasttick = now;
     g_lastfps = fps;
 
-    // Reset g_lasttick if it exceeds g_cvMaxStore value.
-    if (g_lasttick > (g_cvMaxStore.IntValue - 1))
+    // Reset g_indexlasttick if it exceeds g_cvMaxStore value.
+    if (g_index > (g_cvMaxStore.IntValue - 1))
     {
         g_uptospeed = true;
         g_index = 0;
@@ -86,6 +86,7 @@ public Action Timer_FPS(Handle timer)
             // Call On Detection forward.
             Call_StartForward(g_fwdOnDetect);
             Call_PushCell(avg);
+            Call_PushCell(fps);
             Call_Finish();
         }
     }
