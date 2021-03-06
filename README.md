@@ -16,7 +16,7 @@ This plugin comes with one forward to allow other plugins to interact. The forwa
  * Called when the server is caught going under the average FPS threshold.
  *
  * @param avgfps The average FPS detected.
- * @param curfps The current FPS  detected.
+ * @param curfps The current FPS detected.
  * 
  * @return void
  */
