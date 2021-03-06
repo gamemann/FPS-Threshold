@@ -6,7 +6,7 @@ I've made this in hopes to mitigate damage on [Elite Hunterz](https://forum.elit
 
 ## ConVars
 * **sm_fpsth_avgtime** - Calculate the average FPS for *x* seconds (*x* representing the CVar value).
-* **sm_nol_theshhold** - If the average FPS goes below this average, force noblock on all players.
+* **sm_fpsth_theshhold** - If the average FPS goes below this average, force noblock on all players.
 
 ## Forwards
 This plugin comes with two forwards to allow other plugins to interact. The forwards may be found below.
