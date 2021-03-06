@@ -7,10 +7,3 @@
  * @return void
  */
 forward void OnDectect(int avgfps, int curFPS);
-
-/**
- * Called when the timer is up after OnDetect().
- * 
- * @return void
- */
-forward void OnDectectEnd();
