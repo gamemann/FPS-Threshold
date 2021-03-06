@@ -39,7 +39,7 @@ public void OnPluginStart()
     g_cvNotify = CreateConVar("sm_nol_notify", "1", "Print to chat all when the server is lagging.");
     g_cvDebug = CreateConVar("sm_nol_debug", "0", "Debug calculations or not.");
 
-    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event);
+    g_fwdOnDetect = CreateGlobalForward("OnDetect", ET_Event, Param_Cell);
     g_fwdOnDetectEnd = CreateGlobalForward("OnDetectEnd", ET_Event);
 
     RegAdminCmd("sm_fps", Command_FPS, ADMFLAG_SLAY);
@@ -108,7 +108,7 @@ public Action Timer_FPS(Handle timer)
         g_index = 0;
     }
 
-    g_fpsarr[g_lasttick] = fps;
+    g_fpsarr[g_index] = fps;
     
     if (g_uptospeed && !g_insequence)
     {
@@ -144,6 +144,7 @@ public Action Timer_FPS(Handle timer)
         {
             // Call On Detection forward.
             Call_StartForward(g_fwdOnDetect);
+            Call_PushCell(avg);
             Call_Finish();
 
             g_insequence = true;
