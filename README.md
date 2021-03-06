@@ -1,6 +1,6 @@
-# Noblock On "Lag"
+# FPS Threshold
 ## Description
-A simple SourceMod plugin that calculates the server FPS every second and when it goes under a certain threshold based off of the average FPS in *x* seconds, it will force noblock on all players for *y* seconds.
+A simple SourceMod plugin that calculates the server FPS every second and when it goes under a certain threshold based off of the average FPS in *x* seconds, offers a forward on detection,
 
 I've made this in hopes to mitigate damage on [Elite Hunterz](https://forum.elite-hunterz.com/)'s Zombie Hunting server from poor performance issues when multiple players are stuck inside of each other.
 
@@ -21,13 +21,6 @@ This plugin comes with two forwards to allow other plugins to interact. The forw
  * @return void
  */
 forward void OnDectect(int avgfps, int curFPS);
-
-/**
- * Called when the timer is up after OnDetect().
- * 
- * @return void
- */
-forward void OnDectectEnd();
 ```
 
 ## Useful Plugins
