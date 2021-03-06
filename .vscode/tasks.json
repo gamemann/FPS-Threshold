@@ -4,7 +4,8 @@
     {
         "env": 
         {
-            "sm_path": "/home/dev/GFL/SourceMod/scripting"
+            "sm_path": "/home/dev/GFL/SourceMod/scripting",
+            "server_path": "/home/roy/css/cstrike"
         }
     },
     "tasks": 
@@ -12,7 +13,7 @@
         {
             "label": "sourcepawn",
             "type": "shell",
-            "command": "$sm_path/spcomp64 ${file} -D ${workspaceFolder} -i ${workspaceFolder}/scripting/include && sudo cp -f ${workspaceFolder}/${fileBasenameNoExtension}.smx /home/roy/css/cstrike/addons/sourcemod/plugins",
+            "command": "$sm_path/spcomp64 ${file} -D ${workspaceFolder} -i ${workspaceFolder}/scripting/include && sudo cp -f ${workspaceFolder}/${fileBasenameNoExtension}.smx ${server_path}/addons/sourcemod/plugins",
             "problemMatcher": []
         }
     ]
