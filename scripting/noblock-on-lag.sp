@@ -34,7 +34,7 @@ GlobalForward g_fwdOnDetectEnd;
 public void OnPluginStart()
 {
     g_cvMaxStore = CreateConVar("sm_nol_avgtime", "6", "How long ago should we calculate the FPS average from");
-    g_cvThreshold = CreateConVar("sm_nol_theshold", "3", "If the average server FPS goes below this, force noblock on all plugins.");
+    g_cvThreshold = CreateConVar("sm_nol_thershold", "3", "If the average server FPS goes below this, force noblock on all plugins.");
     g_cvNoblockTime = CreateConVar("sm_nol_time", "5", "How long to force noblock on all players for.");
     g_cvNotify = CreateConVar("sm_nol_notify", "1", "Print to chat all when the server is lagging.");
     g_cvDebug = CreateConVar("sm_nol_debug", "0", "Debug calculations or not.");
