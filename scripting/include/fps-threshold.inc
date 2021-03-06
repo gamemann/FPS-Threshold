@@ -6,4 +6,4 @@
  * 
  * @return void
  */
-forward void OnDectect(int avgfps, int curFPS);
+forward void OnDectect(int avgfps, int curfps);
