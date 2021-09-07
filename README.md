@@ -20,7 +20,7 @@ This plugin comes with one forward to allow other plugins to interact. The forwa
  * 
  * @return void
  */
-forward void FPSTH_OnDetect(int avgfps, int curfps);
+forward void FPSTH_OnDetect(float avgfps, int curfps);
 ```
 
 ## Useful Plugins
